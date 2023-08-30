@@ -5,8 +5,11 @@ from typing import List
 
 from database import Database, DatabaseType, Application, Shortcut  # Import your module and classes here
 
+test_calls = 1
 
-def _print_results(entries: List[Application or Shortcut]):
+
+def _print_results(entries: List[Application or Shortcut]) -> None:
+    _test_call()
     for entry in entries:
         if isinstance(entry, Application):
             print(f"Application - ID: {entry.id}, Name: {entry.name}")
@@ -15,9 +18,15 @@ def _print_results(entries: List[Application or Shortcut]):
                 f"Shortcut - ID: {entry.id}, App: {entry.app}, Shortcut: {entry.shortcut}, Keybinding: {entry.keybinding}, Description: {entry.description}")
 
 
-class TestDatabase(unittest.TestCase):
+def _test_call() -> None:
+    global test_calls
+    print("")
+    print(f"------------ TEST #{test_calls}  ------------")
+    test_calls += 1
 
-    def test_app_entry(self):
+
+class TestDatabase(unittest.TestCase):
+    def test_app_entry(self) -> None:
         test_application_db = Database("applications.db", DatabaseType.Applications)
         test_application_db.build_db()
 
@@ -30,9 +39,15 @@ class TestDatabase(unittest.TestCase):
         app_3 = Application(3, "Chrome")
         test_application_db.add_entry(app_3)
 
+        # get all entries
         test_results = test_application_db.get_entries()
         _print_results(test_results)
         self.assertEqual(len(test_results), 3)
+
+        # get only 2 entries
+        limited_results = test_application_db.get_entries(1)
+        _print_results(limited_results)
+        self.assertEqual(len(limited_results), 1)
 
         test_application_db.cleanup_table()
         test_application_db.close()
@@ -57,8 +72,6 @@ class TestDatabase(unittest.TestCase):
 
         test_shortcut_db.cleanup_table()
         test_shortcut_db.close()
-
-
 
 
 if __name__ == '__main__':

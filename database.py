@@ -62,13 +62,19 @@ class Database:
             self.conn.commit()
 
     # query the database for all entries
-    def get_entries(self) -> List[Application or Shortcut]:
+    def get_entries(self, max_entries: int = None) -> List[Application or Shortcut]:
         if self.db_type == DatabaseType.Applications:
-            cursor = self.conn.execute("SELECT id, name FROM applications")
+            query = "SELECT id, name FROM applications"
+            if max_entries is not None:
+                query += f" LIMIT {max_entries}"
+            cursor = self.conn.execute(query)
             entries = [Application(row[0], row[1]) for row in cursor.fetchall()]
             return entries
         elif self.db_type == DatabaseType.Shortcuts:
-            cursor = self.conn.execute("SELECT id, app, shortcut, keybinding, description FROM shortcuts")
+            query = "SELECT id, app, shortcut, keybinding, description FROM shortcuts"
+            if max_entries is not None:
+                query += f" LIMIT {max_entries}"
+            cursor = self.conn.execute(query)
             entries = [Shortcut(row[0], row[1], row[2], row[3], row[4]) for row in cursor.fetchall()]
             return entries
 
