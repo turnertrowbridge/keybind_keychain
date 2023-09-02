@@ -10,34 +10,36 @@ class Trie:
 
     def insert(self, word):
         node = self.root
-        for char in word:
-            if char not in node.children:
-                node.children[char] = TrieNode()
-            node = node.children[char]
+        for c in word:
+            if c not in node.children:
+                node.children[c] = TrieNode()
+            node = node.children[c]
         node.is_word = True
 
     def search(self, word):
         node = self.root
-        for char in word:
-            if char not in node.children:
+        for c in word:
+            if c not in node.children:
                 return False
-            node = node.children[char]
+            node = node.children[c]
         return node.is_word
 
     # finds words that start with prefix
     def search_all(self, prefix):
+        found_words = []
         node = self.root
-        suggestions = []  # pass by reference
-        for char in prefix:
-            if char not in node.children:
+        for c in prefix:
+            if c not in node.children:  # pass by reference
                 return []
-            node = node.children[char]
-        self.find_words(node, prefix, suggestions)
-        return suggestions
+            node = node.children[c]
+        self.search_all_dfs(node, prefix, found_words)
+        return found_words
 
     # recursive helper function for search_all
-    def find_words(self, node, prefix, suggestions):
+    def search_all_dfs(self, node, prefix, found_words):
         if node.is_word:
-            suggestions.append(prefix)
-        for char in node.children:
-            self.find_words(node.children[char], prefix + char, suggestions)
+            found_words.append(prefix)
+        for c in node.children:
+            self.search_all_dfs(node.children[c], prefix + c, found_words)
+
+
