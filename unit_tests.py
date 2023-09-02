@@ -1,9 +1,8 @@
 import unittest
-
-import unittest
 from typing import List
 
 from database import Database, DatabaseType, Application, Shortcut  # Import your module and classes here
+from trie import Trie
 
 test_calls = 1
 
@@ -72,6 +71,40 @@ class TestDatabase(unittest.TestCase):
 
         test_shortcut_db.cleanup_table()
         test_shortcut_db.close()
+
+    def test_trie(self):
+        trie = Trie()
+        words = ["apple", "app", "application", "applesauce", "apples", "applet",
+                 "appetizer", "appetite", "appetizing"
+                 , "amazing", "baseball"]
+        for word in words:
+            trie.insert(word)
+
+        _test_call()
+        print("apple in trie:", trie.search("apple"))
+        self.assertTrue(trie.search("apple"))
+
+        _test_call()
+        print("applesauceee in trie:", trie.search("applesauce"))
+        self.assertFalse(trie.search("applesauceee"))
+
+        _test_call()
+        print(trie.search_all("app"))
+        self.assertEqual(trie.search_all("app"), ["app", "apple", "apples", "applesauce", "applet",
+                                                  "application", "appetizer", "appetizing", "appetite"])
+
+        _test_call()
+        print("Search for am yields:", trie.search_all("am"))
+        self.assertEqual(trie.search_all("am"), ["amazing"])
+
+        _test_call()
+        print("Search for a yields:", trie.search_all("a"))
+        self.assertEqual(trie.search_all("a"), ['app', 'apple', 'apples', 'applesauce', 'applet', 'application',
+                                                'appetizer', 'appetizing', 'appetite', 'amazing'])
+
+        _test_call()
+        print("Search for a yields:", trie.search_all("base"))
+        self.assertEqual(trie.search_all("base"), ["baseball"])
 
 
 if __name__ == '__main__':
