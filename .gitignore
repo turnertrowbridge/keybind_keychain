@@ -5,3 +5,4 @@ lib
 .Python
 *.db
 pyvenv.cfg
+__pycache__
