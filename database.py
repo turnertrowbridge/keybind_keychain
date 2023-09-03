@@ -3,12 +3,6 @@ import sqlite3
 from typing import List
 
 
-# TODO: Refactor Database class to use a single database file, meaning it holds multiple tables
-
-# TODO: Update unit tests based on previous changes
-
-# TODO: Make function to lookup all the tables in file
-
 class DatabaseType:
     Applications = 1
     Shortcuts = 2
