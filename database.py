@@ -33,7 +33,7 @@ class Database:
     def __init__(self, file_name: str) -> None:
         self.file_name = file_name
         self.conn = sqlite3.connect(file_name)
-        self.conn.execute("PRAGMA foreign_keys = ON")
+        # self.conn.execute("PRAGMA foreign_keys = ON")
         self.conn.commit()
 
     # create an applications table
