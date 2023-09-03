@@ -66,17 +66,16 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(len(test_db.get_applications(1003)), 1003)  # should return 1003 entries
         self.assertEqual(len(test_db.get_applications(1007)), 1003)  # should return 1003 entries
 
-
         # add shortcuts table
         test_db.create_shortcuts_table()
-        app_1 = Shortcut(
+        shortcut_1 = Shortcut(
             1,
             "Vim",
             "delete line",
             "dd",
             "Deletes line and saves to clipboard"
         )
-        test_db.add_entry(app_1)
+        test_db.add_entry(shortcut_1)
 
         test_results = test_db.get_shortcuts()
         _print_results(test_results)
