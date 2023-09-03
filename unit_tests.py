@@ -53,10 +53,19 @@ class TestDatabase(unittest.TestCase):
         _print_results(test_results)
         self.assertEqual(len(test_results), 3)
 
-        # get only 2 entries
+        # get only 1 entry
         limited_results = test_db.get_applications(1)
         _print_results(limited_results)
         self.assertEqual(len(limited_results), 1)
+
+        # test more than 1000 entries, 3 + 1000 = 1003
+        for i in range(1000):
+            app = Application(i, "Test")
+            test_db.add_entry(app)
+        self.assertEqual(len(test_db.get_applications()), 1000)  # should return 1000 entries
+        self.assertEqual(len(test_db.get_applications(1003)), 1003)  # should return 1003 entries
+        self.assertEqual(len(test_db.get_applications(1007)), 1003)  # should return 1003 entries
+
 
         # add shortcuts table
         test_db.create_shortcuts_table()

@@ -68,19 +68,17 @@ class Database:
             self.conn.commit()
 
     # query the database for applications
-    def get_applications(self, max_entries: int = None) -> List[Application]:
+    def get_applications(self, max_entries: int = 1000) -> List[Application]:
         query = "SELECT id, name FROM applications"
-        if max_entries is not None:
-            query += f" LIMIT {max_entries}"
+        query += f" LIMIT {max_entries}"
         cursor = self.conn.execute(query)
         entries = [Application(row[0], row[1]) for row in cursor.fetchall()]
         return entries
 
     # query the database for shortcuts
-    def get_shortcuts(self, max_entries: int = None) -> List[Shortcut]:
+    def get_shortcuts(self, max_entries: int = 1000) -> List[Shortcut]:
         query = "SELECT id, app, shortcut, keybinding, description FROM shortcuts"
-        if max_entries is not None:
-            query += f" LIMIT {max_entries}"
+        query += f" LIMIT {max_entries}"
         cursor = self.conn.execute(query)
         entries = [Shortcut(row[0], row[1], row[2], row[3], row[4]) for row in cursor.fetchall()]
         return entries
