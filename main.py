@@ -1,8 +1,7 @@
 import database
 import sys
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QListWidget, QComboBox
-from typing import List
-
+from PyQt6.QtWidgets import QApplication
+from gui_app import AutoCompleteApp
 
 from trie import Trie
 
@@ -11,73 +10,6 @@ from trie import Trie
 # TODO: Load data from database into trie, and use trie to autocomplete search box
 
 DB_NAME = "kb_ky_database.db"
-
-class AutoCompleteApp(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
-
-    def initUI(self):
-        layout = QVBoxLayout(self)
-
-        # load names into comboBox
-        self.comboBox = QComboBox(self)
-        app_names = self.load_app_names()
-        self.comboBox.addItem("Any Application")
-        for app_name in app_names:
-            self.comboBox.addItem(app_name)
-        layout.addWidget(self.comboBox)
-
-        # adds the custom search box for autocomplete
-        self.search_box = AutoCompleteTextBox(self)
-        layout.addWidget(self.search_box)
-
-        self.setGeometry(100, 100, 400, 300)
-        self.setWindowTitle('Keybind Keychain🔑')
-
-    def load_app_names(self) -> List[str]:
-        applications_list = database.Database(DB_NAME).get_applications()
-        app_names = [app.name for app in applications_list]
-        return app_names
-
-
-class AutoCompleteTextBox(QWidget):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.layout = QVBoxLayout(self)
-        self.text_box = QLineEdit(self)
-        self.suggestion_list = QListWidget(self)
-        self.layout.addWidget(self.text_box)
-        self.layout.addWidget(self.suggestion_list)
-
-        # Create and load the Trie with data from the database
-        self.trie = Trie()
-        self.load_trie_data()
-
-    def load_trie_data(self):
-        # # load apps
-        # applications_list = database.Database(DB_NAME).get_applications()
-        # for app in applications_list:
-        #     self.trie.insert(app.name)
-        # load shortcuts
-        shortcuts_list = database.Database(DB_NAME).get_shortcuts()
-        for shortcut in shortcuts_list:
-            self.trie.insert(shortcut.shortcut)
-
-        print(self.trie.search_all(""))
-
-        # Connect textChanged signal to show suggestions
-        self.text_box.textChanged.connect(self.show_suggestions)
-
-        # show all suggestions by default
-        self.show_suggestions()
-
-    def show_suggestions(self):
-        prefix = self.text_box.text()
-        suggestions = self.trie.search_all(prefix)
-
-        self.suggestion_list.clear()
-        self.suggestion_list.addItems(suggestions)
 
 
 def main():
@@ -101,12 +33,36 @@ def main():
     )
     db.add_entry(shortcut_1)
 
+    shortcut_2 = database.Shortcut(
+        2,
+        "Vim",
+        "delete word",
+        "dw",
+        "Deletes word and saves to clipboard",
+    )
+    db.add_entry(shortcut_2)
 
+    shortcut_3 = database.Shortcut(
+        3,
+        "Vim",
+        "delete character",
+        "x",
+        "Deletes character and saves to clipboard",
+    )
+    db.add_entry(shortcut_3)
+
+    shortcut_4 = database.Shortcut(
+        4,
+        "Chrome",
+        "open new tab",
+        "ctrl+t",
+        "Opens a new tab in Chrome",
+    )
+    db.add_entry(shortcut_4)
 
     app = QApplication(sys.argv)
     ex = AutoCompleteApp()
     ex.show()  # Show the main window
-
 
     db._delete_db()
 
