@@ -2,19 +2,21 @@ class TrieNode:
     def __init__(self):
         self.children = {}
         self.is_word = False
+        self.object_value = None
 
 
 class Trie:
     def __init__(self):
         self.root = TrieNode()
 
-    def insert(self, word):
+    def insert(self, word, object_value):
         node = self.root
         for c in word:
             if c not in node.children:
                 node.children[c] = TrieNode()
             node = node.children[c]
         node.is_word = True
+        node.object_value = object_value
 
     def search(self, word):
         node = self.root
@@ -38,7 +40,7 @@ class Trie:
     # recursive helper function for search_all
     def search_all_dfs(self, node, prefix, found_words):
         if node.is_word:
-            found_words.append(prefix)
+            found_words.append((prefix, node.object_value))
         for c in node.children:
             self.search_all_dfs(node.children[c], prefix + c, found_words)
 
