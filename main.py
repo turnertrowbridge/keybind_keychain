@@ -3,12 +3,6 @@ import sys
 from PyQt6.QtWidgets import QApplication
 from gui_app import AutoCompleteApp
 
-from trie import Trie
-
-# TODO: Split this into multiple files
-
-# TODO: Load data from database into trie, and use trie to autocomplete search box
-
 DB_NAME = "kb_ky_database.db"
 
 
@@ -63,8 +57,6 @@ def main():
     app = QApplication(sys.argv)
     ex = AutoCompleteApp()
     ex.show()  # Show the main window
-
-    db._delete_db()
 
     sys.exit(app.exec())
 
