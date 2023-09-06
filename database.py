@@ -81,6 +81,26 @@ class Database:
         entries = [Shortcut(row[0], row[1], row[2], row[3], row[4]) for row in cursor.fetchall()]
         return entries
 
+    def update_application(self, application: Application) -> None:
+        query = f"UPDATE applications SET name = '{application.name}' WHERE name = {application.name}"
+        self.conn.execute(query)
+        self.conn.commit()
+
+    def update_shortcut(self, shortcut: Shortcut) -> None:
+        query = f"UPDATE shortcuts SET app = '{shortcut.app}', shortcut = '{shortcut.shortcut}', keybinding = '{shortcut.keybinding}', description = '{shortcut.description}' WHERE app = {shortcut.app}"
+        self.conn.execute(query)
+        self.conn.commit()
+
+    def delete_application(self, application: Application) -> None:
+        query = f"DELETE FROM applications WHERE name = {application.name}"
+        self.conn.execute(query)
+        self.conn.commit()
+
+    def delete_shortcut(self, shortcut: Shortcut) -> None:
+        query = f"DELETE FROM shortcuts WHERE app = {shortcut.app}"
+        self.conn.execute(query)
+        self.conn.commit()
+
     # get all tables
     def get_tables(self) -> List[str]:
         cursor = self.conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
